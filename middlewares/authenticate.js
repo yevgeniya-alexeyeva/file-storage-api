@@ -2,13 +2,13 @@ const passport = require("passport");
 require("../configs/passport-config");
 
 const authenticate = (req, res, next) => {
-  passport.authenticate("jwt", { session: false }, (error, user) => {
-    if (error || !user || !user.token) {
+  passport.authenticate("jwt", { session: false }, (error, User) => {
+    if (error || !User || !User.Token) {
       return res
         .status(401)
         .json({ status: "error", code: 401, message: "Unauthorized" });
     }
-    req.user = user;
+    req.User = User;
     next();
   })(req, res, next);
 };

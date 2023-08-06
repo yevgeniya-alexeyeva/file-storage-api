@@ -5,7 +5,7 @@ const userUtils = require("./user.utils");
 const SequelizeOperators = sequelize.Op;
 const { addToken, addRefreshToken } = require("../../helpers/token");
 
-const addUser = async (req, res, next) => {
+const signin = async (req, res, next) => {
   try {
     const invalid = userUtils.registerValidation(["Password"], req?.body);
 
@@ -15,6 +15,7 @@ const addUser = async (req, res, next) => {
         code: 400,
         message: invalid,
       });
+
       return;
     }
 
@@ -26,57 +27,50 @@ const addUser = async (req, res, next) => {
         code: 400,
         message: "Email or PhoneNumber is required",
       });
+
       return;
     }
 
+    const password = crypto.createHash("md5").update(Password).digest("hex");
+
     const userWhereParams = {
       UserID: { [SequelizeOperators.or]: [Email, PhoneNumber] },
+      Password: password,
     };
 
     const User = EntityFactory.getEntity("User");
 
-    const userExists = await User.findOne({
+    const user = await User.findOne({
       where: userWhereParams,
       raw: true,
     });
 
-    if (userExists) {
+    if (!user) {
       res.status(400).json({
         status: "error",
         code: 400,
-        message: "User already exists.",
+        message: "User not found.",
       });
+
       return;
     }
 
-    const newUser = await User.create({
-      UserID: Email || PhoneNumber,
-      Email,
-      PhoneNumber,
-      Password: crypto.createHash("md5").update(Password).digest("hex"),
-    });
+    const Token = addToken(user.UserID);
+    const RefreshToken = addRefreshToken(user.UserID);
 
-    if (!newUser) {
-      res.status(400).json({
-        status: "error",
-        code: 400,
-        message: "Bad request",
-      });
-    }
+    await User.update({ Token }, { where: { UserID: user.UserID } });
 
-    const Token = addToken(newUser.UserID);
-    const RefreshToken = addRefreshToken(newUser.UserID);
-
-    await User.update({ Token }, { where: { UserID: newUser.UserID } });
-
-    res.status(201).json({
+    res.json({
       status: "success",
-      code: 201,
-      message: "Registration successful",
+      code: 200,
       data: {
         result: {
           Token,
           RefreshToken,
+          User: {
+            Email: user.Email,
+            PhoneNumber: user.PhoneNumber,
+          },
         },
       },
     });
@@ -85,4 +79,4 @@ const addUser = async (req, res, next) => {
   }
 };
 
-module.exports = addUser;
+module.exports = signin;

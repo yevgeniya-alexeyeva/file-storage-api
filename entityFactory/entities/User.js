@@ -31,17 +31,11 @@ class User extends Sequelize.Model {
           field: "PhoneNumber",
           allowNull: true,
         },
-        Secret: {
+        Token: {
           type: DataTypes.STRING(255),
-          field: "Secret",
+          validate: { notEmpty: true },
+          field: "Token",
           allowNull: true,
-          defaultValue: "",
-        },
-        Expiration: {
-          type: DataTypes.BIGINT.UNSIGNED,
-          field: "Expiration",
-          allowNull: false,
-          defaultValue: 10,
         },
       },
       {
@@ -51,21 +45,6 @@ class User extends Sequelize.Model {
       }
     );
   }
-
-  //   static associate(models) {
-  //     const {
-  //      File,
-  //     } = models;
-  //     this.hasMany(File, {
-  //       as: "Files",
-  //       foreignKey: {
-  //         name: "UserID",
-  //         allowNull: false,
-  //         onDelete: "CASCADE",
-  //         onUpdate: "CASCADE",
-  //       },
-  //     });
-  //   }
 }
 
 module.exports = User;

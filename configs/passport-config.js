@@ -1,20 +1,23 @@
 const passport = require("passport");
 const { ExtractJwt, Strategy } = require("passport-jwt");
-const { User } = require("../model");
-require("dotenv").config();
-
-const { SECRET_KEY } = process.env;
+const EntityFactory = require("../entityFactory");
+const config = require("./index");
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: SECRET_KEY,
+  secretOrKey: config.server.tokenSecret,
 };
 
 const jwtStrategy = new Strategy(options, async (payload, done) => {
   try {
-    const user = await User.findById(payload.id);
-    if (!user) throw new Error("Not found");
-    done(null, user);
+    const UserEntity = EntityFactory.getEntity("User");
+    const User = await UserEntity.findOne({
+      where: { UserID: payload.id },
+    });
+
+    if (!User) throw new Error("Not found");
+
+    done(null, User);
   } catch (error) {
     done(error);
   }
