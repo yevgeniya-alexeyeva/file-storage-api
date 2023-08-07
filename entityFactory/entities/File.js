@@ -26,7 +26,7 @@ class File extends Sequelize.Model {
           allowNull: false,
         },
         MimeType: {
-          type: DataTypes.STRING(50),
+          type: DataTypes.STRING(64),
           validate: { notEmpty: true },
           field: "MimeType",
           allowNull: false,

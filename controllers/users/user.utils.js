@@ -6,8 +6,9 @@ module.exports.authValidation = (
   additionalProperties = false
 ) => {
   const properties = {
-    Token: { type: "string" },
     Password: { type: "string", minLength: 1 },
+    Email: { type: "string", minLength: 1 },
+    PhoneNumber: { type: "string", minLength: 1 },
   };
   return validateObject(
     properties,
@@ -23,12 +24,10 @@ module.exports.registerValidation = (
   additionalProperties = false
 ) => {
   const properties = {
-    Token: { type: "string" },
     RefreshToken: { type: "string" },
     Password: { type: "string", minLength: 1 },
     Email: { type: "string", minLength: 1 },
     PhoneNumber: { type: "string", minLength: 1 },
-    InviteToken: { type: "string", minLength: 1 },
   };
   return validateObject(
     properties,

@@ -3,11 +3,11 @@ const crypto = require("crypto");
 const EntityFactory = require("../../entityFactory");
 const userUtils = require("./user.utils");
 const SequelizeOperators = sequelize.Op;
-const { addToken, addRefreshToken } = require("../../helpers/token");
+const { createToken, createRefreshToken } = require("../../helpers/token");
 
 const signin = async (req, res, next) => {
   try {
-    const invalid = userUtils.registerValidation(["Password"], req?.body);
+    const invalid = userUtils.authValidation(["Password"], req?.body);
 
     if (invalid) {
       res.status(400).json({
@@ -38,9 +38,9 @@ const signin = async (req, res, next) => {
       Password: password,
     };
 
-    const UserEntity = EntityFactory.getEntity("User");
+    const userEntity = EntityFactory.getEntity("User");
 
-    const User = await UserEntity.findOne({
+    const User = await userEntity.findOne({
       where: userWhereParams,
       raw: true,
     });
@@ -55,10 +55,10 @@ const signin = async (req, res, next) => {
       return;
     }
 
-    const Token = addToken(User.UserID);
-    const RefreshToken = addRefreshToken(User.UserID);
+    const Token = createToken(User.UserID);
+    const RefreshToken = createRefreshToken(User.UserID);
 
-    await UserEntity.update({ Token }, { where: { UserID: User.UserID } });
+    await userEntity.update({ Token }, { where: { UserID: User.UserID } });
 
     res.json({
       status: "success",

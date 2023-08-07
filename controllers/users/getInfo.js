@@ -1,11 +1,11 @@
 const EntityFactory = require("../../entityFactory");
-const { getUserID } = require("../../helpers/token");
+const { getDecodedToken } = require("../../helpers/token");
 
 const getInfo = async (req, res, next) => {
   try {
     const { Token = null } = req.User;
 
-    const params = getUserID(Token);
+    const params = getDecodedToken(Token);
 
     if (!params) {
       res.status(400).json({
@@ -17,9 +17,9 @@ const getInfo = async (req, res, next) => {
       return;
     }
 
-    const UserEntity = EntityFactory.getEntity("User");
+    const userEntity = EntityFactory.getEntity("User");
 
-    const user = await UserEntity.findOne({
+    const user = await userEntity.findOne({
       where: { UserID: params.id },
       raw: true,
     });

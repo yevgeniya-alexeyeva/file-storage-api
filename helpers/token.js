@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const config = require("../configs");
 
-const addToken = (id) => {
+const createToken = (id) => {
   const payload = {
     id,
   };
@@ -12,7 +12,7 @@ const addToken = (id) => {
   });
 };
 
-const addRefreshToken = (id) => {
+const createRefreshToken = (id) => {
   const payload = {
     id,
   };
@@ -35,8 +35,13 @@ const verifyRefreshToken = (refreshToken) => {
   );
 };
 
-const getUserID = (token) => {
+const getDecodedToken = (token) => {
   return jwt.decode(token, config.server.tokenSecret);
 };
 
-module.exports = { addToken, addRefreshToken, verifyRefreshToken, getUserID };
+module.exports = {
+  createToken,
+  createRefreshToken,
+  verifyRefreshToken,
+  getDecodedToken,
+};

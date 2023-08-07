@@ -10,8 +10,8 @@ const options = {
 
 const jwtStrategy = new Strategy(options, async (payload, done) => {
   try {
-    const UserEntity = EntityFactory.getEntity("User");
-    const User = await UserEntity.findOne({
+    const userEntity = EntityFactory.getEntity("User");
+    const User = await userEntity.findOne({
       where: { UserID: payload.id },
     });
 

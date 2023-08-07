@@ -3,7 +3,7 @@ const crypto = require("crypto");
 const EntityFactory = require("../../entityFactory");
 const userUtils = require("./user.utils");
 const SequelizeOperators = sequelize.Op;
-const { addToken, addRefreshToken } = require("../../helpers/token");
+const { createToken, createRefreshToken } = require("../../helpers/token");
 
 const addUser = async (req, res, next) => {
   try {
@@ -33,9 +33,9 @@ const addUser = async (req, res, next) => {
       UserID: { [SequelizeOperators.or]: [Email, PhoneNumber] },
     };
 
-    const User = EntityFactory.getEntity("User");
+    const userEntity = EntityFactory.getEntity("User");
 
-    const userExists = await User.findOne({
+    const userExists = await userEntity.findOne({
       where: userWhereParams,
       raw: true,
     });
@@ -49,7 +49,7 @@ const addUser = async (req, res, next) => {
       return;
     }
 
-    const newUser = await User.create({
+    const newUser = await userEntity.create({
       UserID: Email || PhoneNumber,
       Email,
       PhoneNumber,
@@ -64,10 +64,10 @@ const addUser = async (req, res, next) => {
       });
     }
 
-    const Token = addToken(newUser.UserID);
-    const RefreshToken = addRefreshToken(newUser.UserID);
+    const Token = createToken(newUser.UserID);
+    const RefreshToken = createRefreshToken(newUser.UserID);
 
-    await User.update({ Token }, { where: { UserID: newUser.UserID } });
+    await userEntity.update({ Token }, { where: { UserID: newUser.UserID } });
 
     res.status(201).json({
       status: "success",

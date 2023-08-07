@@ -1,8 +1,8 @@
 const EntityFactory = require("../../entityFactory");
 const userUtils = require("./user.utils");
 const {
-  addToken,
-  addRefreshToken,
+  createToken,
+  createRefreshToken,
   verifyRefreshToken,
 } = require("../../helpers/token");
 
@@ -34,9 +34,9 @@ const refreshToken = async (req, res, next) => {
       return;
     }
 
-    const User = EntityFactory.getEntity("User");
+    const userEntity = EntityFactory.getEntity("User");
 
-    const user = await User.findOne({
+    const user = await userEntity.findOne({
       where: { UserID: decodedToken.id },
       raw: true,
     });
@@ -51,10 +51,13 @@ const refreshToken = async (req, res, next) => {
       return;
     }
 
-    const newToken = addToken(user.UserID);
-    const newRefreshToken = addRefreshToken(user.UserID);
+    const newToken = createToken(user.UserID);
+    const newRefreshToken = createRefreshToken(user.UserID);
 
-    await User.update({ Token: newToken }, { where: { UserID: user.UserID } });
+    await userEntity.update(
+      { Token: newToken },
+      { where: { UserID: user.UserID } }
+    );
 
     res.json({
       status: "success",
