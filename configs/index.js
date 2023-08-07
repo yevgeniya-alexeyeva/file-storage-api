@@ -19,10 +19,6 @@ module.exports = {
       process.env.FILE_STORAGE_PATH ||
       path.join(process.cwd(), "public", "files"),
   },
-  corsSettings: {
-    origin: process.env.SERVER_ORIGIN,
-    exposedHeaders: process.env.SERVER_EXPOSE_HEADERS?.split(","),
-  },
   database: {
     name: process.env.DATABASE_NAME ?? "test",
     host: process.env.DATABASE_HOST ?? "localhost",
