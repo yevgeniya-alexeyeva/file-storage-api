@@ -2,7 +2,7 @@ const fs = require("fs/promises");
 const path = require("path");
 const { v4 } = require("uuid");
 const EntityFactory = require("../../entityFactory");
-
+const config = require("../../configs");
 
 const upload = async (req, res, next) => {
   if (!req.file) {
@@ -19,13 +19,11 @@ const upload = async (req, res, next) => {
   const { FileName = originalname } = req.body;
 
   try {
-    const uploadDir = path.join(process.cwd(), "public", "files");
+    const FileID = v4();
 
-    const fileName = path.join(uploadDir, `${FileName || originalname}`);
+    const fileName = path.join(config.storage.file, `${FileID}_${FileName}`);
 
     fs.rename(tempName, fileName);
-
-    const FileID = v4();
 
     const fileCreateParams = {
       FileID,

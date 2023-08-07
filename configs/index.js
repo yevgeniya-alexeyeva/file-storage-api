@@ -1,3 +1,5 @@
+const path = require("path");
+
 module.exports = {
   logger: {
     logPath: process.env.LOGGER_LOG_PATH,
@@ -13,7 +15,9 @@ module.exports = {
     refreshTokenSecret: process.env.SERVER_REFRESH_TOKEN_SECRET ?? "refresh",
   },
   storage: {
-    file: process.env.FILE_STORAGE_PATH,
+    file:
+      process.env.FILE_STORAGE_PATH ||
+      path.join(process.cwd(), "public", "files"),
   },
   corsSettings: {
     origin: process.env.SERVER_ORIGIN,

@@ -6,7 +6,7 @@ module.exports.crudValidation = (
   additionalProperties = false
 ) => {
   const properties = {
-    FileID: { anyOf: [{ type: "number" }, { type: "string" }] },
+    FileID: { type: "string" },
     FileName: { type: "string" },
     limit: { type: "number" },
     offset: { type: "number" },
@@ -19,4 +19,3 @@ module.exports.crudValidation = (
     additionalProperties
   );
 };
-

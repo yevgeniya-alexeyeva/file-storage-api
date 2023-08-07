@@ -38,14 +38,14 @@ const signin = async (req, res, next) => {
       Password: password,
     };
 
-    const User = EntityFactory.getEntity("User");
+    const UserEntity = EntityFactory.getEntity("User");
 
-    const user = await User.findOne({
+    const User = await UserEntity.findOne({
       where: userWhereParams,
       raw: true,
     });
 
-    if (!user) {
+    if (!User) {
       res.status(400).json({
         status: "error",
         code: 400,
@@ -55,10 +55,10 @@ const signin = async (req, res, next) => {
       return;
     }
 
-    const Token = addToken(user.UserID);
-    const RefreshToken = addRefreshToken(user.UserID);
+    const Token = addToken(User.UserID);
+    const RefreshToken = addRefreshToken(User.UserID);
 
-    await User.update({ Token }, { where: { UserID: user.UserID } });
+    await UserEntity.update({ Token }, { where: { UserID: User.UserID } });
 
     res.json({
       status: "success",
@@ -68,8 +68,8 @@ const signin = async (req, res, next) => {
           Token,
           RefreshToken,
           User: {
-            Email: user.Email,
-            PhoneNumber: user.PhoneNumber,
+            Email: User.Email,
+            PhoneNumber: User.PhoneNumber,
           },
         },
       },
