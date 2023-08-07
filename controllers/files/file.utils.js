@@ -8,9 +8,8 @@ module.exports.crudValidation = (
   const properties = {
     FileID: { type: "string" },
     FileName: { type: "string" },
-    limit: { type: "number" },
-    offset: { type: "number" },
-    query: { type: "object" },
+    list_size: { type: "number" },
+    page: { type: "number" },
   };
   return validateObject(
     properties,

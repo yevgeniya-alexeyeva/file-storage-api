@@ -11,7 +11,7 @@ router.post("/signin", express.json(), userController.signin);
 router.get("/info", authenticate, express.json(), userController.getInfo);
 router.get("/logout", authenticate, express.json(), userController.logout);
 
-router.get("/file/:id", authenticate, fileController.getFileInfo);
+router.get("/file/list", authenticate, express.json(), fileController.list);
 router.post(
   "/file/upload",
   authenticate,
@@ -26,5 +26,6 @@ router.put(
   fileController.update
 );
 router.delete("/file/delete/:id", authenticate, fileController.deleteFile);
+router.get("/file/:id", authenticate, fileController.getFileInfo);
 
 module.exports = router;

@@ -34,9 +34,9 @@ const upload = async (req, res, next) => {
       UploadAt: new Date(),
     };
 
-    const FileEntity = EntityFactory.getEntity("File");
+    const fileEntity = EntityFactory.getEntity("File");
 
-    await FileEntity.create(fileCreateParams);
+    await fileEntity.create(fileCreateParams);
 
     res.json({
       status: "success",

@@ -11,7 +11,7 @@ module.exports = {
     host: process.env.SERVER_HOST ?? "localhost",
     port: process.env.SERVER_PORT ?? "3000",
     tokenSecret: process.env.SERVER_TOKEN_SECRET ?? "secret",
-    tokenLife: process.env.SERVER_TOKEN_LIFE ?? "100m",
+    tokenLife: process.env.SERVER_TOKEN_LIFE ?? "10m",
     refreshTokenSecret: process.env.SERVER_REFRESH_TOKEN_SECRET ?? "refresh",
   },
   storage: {

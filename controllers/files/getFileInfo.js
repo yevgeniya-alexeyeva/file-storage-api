@@ -4,9 +4,9 @@ const getFileInfo = async (req, res, next) => {
   try {
     const { id: FileID = null } = req?.params;
 
-    const FileEntity = EntityFactory.getEntity("File");
+    const fileEntity = EntityFactory.getEntity("File");
 
-    const file = await FileEntity.findOne({
+    const file = await fileEntity.findOne({
       where: { FileID },
       raw: true,
     });

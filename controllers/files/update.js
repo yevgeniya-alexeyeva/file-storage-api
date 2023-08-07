@@ -19,9 +19,9 @@ const update = async (req, res, next) => {
 
   const { path: tempName, originalname, size, mimetype } = req.file;
 
-  const FileEntity = EntityFactory.getEntity("File");
+  const fileEntity = EntityFactory.getEntity("File");
 
-  const file = await FileEntity.findOne({ where: { FileID }, raw: true });
+  const file = await fileEntity.findOne({ where: { FileID }, raw: true });
 
   if (!file) {
     res.status(400).json({
@@ -54,9 +54,9 @@ const update = async (req, res, next) => {
 
     const filePath = path.join(config.storage.file, `${FileID}_${FileName}`);
 
-    fsPromises.rename(tempName, filePath);
-
     fsPromises.unlink(oldFilePath);
+
+    fsPromises.rename(tempName, filePath);
 
     const fileUpdateParams = {
       FileName,
@@ -66,9 +66,9 @@ const update = async (req, res, next) => {
       UploadAt: new Date(),
     };
 
-    const FileEntity = EntityFactory.getEntity("File");
+    const fileEntity = EntityFactory.getEntity("File");
 
-    await FileEntity.update(fileUpdateParams, { where: { FileID } });
+    await fileEntity.update(fileUpdateParams, { where: { FileID } });
 
     res.json({
       status: "success",

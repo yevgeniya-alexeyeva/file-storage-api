@@ -8,9 +8,9 @@ const deleteFile = async (req, res, next) => {
   try {
     const { id: FileID = null } = req?.params;
 
-    const FileEntity = EntityFactory.getEntity("File");
+    const fileEntity = EntityFactory.getEntity("File");
 
-    const file = await FileEntity.findOne({ where: { FileID }, raw: true });
+    const file = await fileEntity.findOne({ where: { FileID }, raw: true });
 
     if (!file) {
       res.status(400).json({
@@ -41,7 +41,7 @@ const deleteFile = async (req, res, next) => {
 
     fsPromises.unlink(filePath);
 
-    await FileEntity.destroy({ where: { FileID } });
+    await fileEntity.destroy({ where: { FileID } });
 
     res.json({
       status: "success",
